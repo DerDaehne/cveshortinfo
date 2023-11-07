@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Datenstruktur für die CVE-Informationen
@@ -96,6 +97,8 @@ func getCVEInfoHandler(w http.ResponseWriter, r *http.Request) {
 	}{
 		CVEInfo: cveInfo,
 	}
+
+	time.Sleep(2 * time.Second)
 
 	tmpl, err := template.ParseFiles("templates/cveinfo.html")
 	if err != nil {

@@ -1,6 +1,14 @@
-{{ range .CVEInfo }}
-<tr>
-  <td>{{ .BaseScore }}</td>
-  <td>{{ .Description }}</td>
-</tr>
-{{ end }}
+<div class="container mt-4">
+  {{ range .CVEInfo }}
+  <div class="row mb-2">
+    <div class="col-md-12">
+      <div class="card" style="background-color: white;">
+        <div class="card-body">
+          <h2 class="card-title text-primary">{{ .BaseScore }}</h2>
+          <p class="card-text">{{ .Description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ end }}
+</div>
