@@ -11,6 +11,17 @@ import (
 	"strings"
 )
 
+// Datenstruktur für die CVE-Informationen
+type CVEInfo struct {
+	BaseScore   string
+	Description string
+}
+
+type TableRowData struct {
+	BaseScore   string
+	Description string
+}
+
 func main() {
 	http.HandleFunc("/", indexHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -57,20 +68,46 @@ func getCVEInfoHandler(w http.ResponseWriter, r *http.Request) {
 	cves := strings.Split(numbersStr, "\n")
 	log.Printf("numbersStr: %s", numbersStr)
 
+	var cveInfo []TableRowData
+
 	for _, cve := range cves {
-		cve = strings.TrimSpace(cve) // Entferne führende und abschließende Leerzeichen
+		cve = strings.TrimSpace(cve)
 		if cve == "" {
-			continue // Überspringe leere Zeilen
+			continue
 		}
 
 		log.Printf("Received CVE number: %s", cve)
-		// Abruf der CVE-Informationen von der API
-		cveInfo, err := fetchCVEInfo(cve)
+		cveData, err := fetchCVEInfo(cve)
 		if err != nil {
 			log.Printf("Error fetching CVE info for %s: %v", cve, err)
 			continue
 		}
-		fmt.Printf("CVE: %s, Base Score: %s, Description: %s\n", cve, cveInfo.BaseScore, cveInfo.Description)
+
+		cveTableRow := TableRowData{
+			BaseScore:   cveData.BaseScore,
+			Description: cveData.Description,
+		}
+
+		cveInfo = append(cveInfo, cveTableRow)
+	}
+
+	data := struct {
+		CVEInfo []TableRowData
+	}{
+		CVEInfo: cveInfo,
+	}
+
+	tmpl, err := template.ParseFiles("templates/cveinfo.html")
+	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Verwende das Template, um das HTML zu generieren und an den Client zu senden
+	if err := tmpl.Execute(w, data); err != nil {
+		log.Printf("Error executing template: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -124,10 +161,4 @@ func fetchCVEInfo(cveNumber string) (CVEInfo, error) {
 	log.Printf("Received CVE info for %s: BaseScore: %s, Description: %s", cveNumber, cveInfo.BaseScore, cveInfo.Description)
 
 	return cveInfo, nil
-}
-
-// Datenstruktur für die CVE-Informationen
-type CVEInfo struct {
-	BaseScore   string
-	Description string
 }
