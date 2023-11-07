@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Go Web Application</title>
+  <!-- Laden von DaisyUI und HTMX über CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@0.27.1/dist/full.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.6.0/dist/htmx.min.js"></script>
+</head>
+
+<body class="flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="bg-white p-8 rounded shadow-md w-1/3">
+    <form>
+      <div class="mb-4">
+        <label for="numbers" class="block text-gray-600 font-semibold">Mehrzeilige Eingabebox:</label>
+        <textarea id="numbers" name="numbers"
+          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+          rows="4"></textarea>
+      </div>
+      <button hx-boost="true" hx-post="/api/getcveinfo" hx-trigger="click" hx-swap="outerHTML" hx-target="#numbers"
+        type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+        Abfragen
+      </button>
+    </form>
+  </div>
+
+  <script>
+    // HTMX-Funktionalität, um das Formular abzuschicken
+    htmx.on("htmx:configRequest", function (event) {
+      if (event.detail.target.id === "numbers") {
+        event.detail.parameters = new URLSearchParams(new FormData(event.detail.target));
+      }
+    });
+  </script>
+</body>
+
+</html>
