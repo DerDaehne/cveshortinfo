@@ -6,31 +6,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Go Web Application</title>
   <!-- Laden von DaisyUI und HTMX über CDN -->
-  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/htmx.org@1.9.8"></script>
 </head>
 
-<body class="flex justify-center items-center min-h-screen bg-gray-100">
-  <div id="formContainer" class="mt-4">
-    <div class="bg-white p-8 rounded shadow-md">
-      <form>
-        <div class="mb-4">
-          <label for="numbers" class="block text-gray-600 font-semibold">Paste CVEs here:</label>
-          <textarea id="numbers" name="numbers"
-            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-            rows="4"></textarea>
-        </div>
-        <button hx-post="/api/getcveinfo" hx-trigger="click" hx-swap="outerHTML" hx-target="#formContainer"
-          hx-indicator="#loadingIndicator" hx-boost="true" type="submit"
-          class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-          Check
-        </button>
-      </form>
-    </div>
-
+<body class="flex justify-center items-center min-h-screen bg-neutral">
+  <div id="loadingIndicator" class="htmx-indicator fixed pointer-events-none top-0 left-0 w-screen h-screen flex items-center justify-center z-30 bg-neutral">
+    <div class="loading loading-infinity loading-lg"></div>
   </div>
-  <div id="loadingIndicator" class="htmx-indicator loading loading-infinity loading-lg"></div>
+
+  <div id="formContainer" class="mt-4">
+    <div class="card w-xl bg-base-200 text-neutral-content">
+      <div class="card-body items-center text-center">
+        <div class="card-title">CVE short info</div>
+        <form>
+          <textarea id="numbers" name="numbers"
+            placeholder="CVE-XXXX-XXXXX" class="my-5 textarea textarea-bordered textarea-lg w-full max-w-lg"
+            rows="4"></textarea>
+          <button hx-post="/api/getcveinfo" hx-trigger="click" hx-swap="outerHTML" hx-target="#formContainer"
+            hx-indicator="#loadingIndicator" hx-boost="true" type="submit"
+            class="btn btn-wide btn-accent">
+            Check
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <script>
     // HTMX-Funktionalität, um das Formular abzuschicken
