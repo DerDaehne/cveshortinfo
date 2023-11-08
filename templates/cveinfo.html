@@ -2,12 +2,21 @@
   {{ range .CVEInfo }}
   <div class="row mb-2">
     <div class="col-md-12">
-      <div class="card" style="background-color: white;">
+
+      <div class="card card-side bg-base-200 shadow-xl">
+        <div class="p-5 bg-warning items-center text-center flex justify-center">
+          <h2 class="text-warning-content text-2xl font-bold">{{ .BaseScore }}</h2>
+        </div>
         <div class="card-body">
-          <h2 class="card-title text-primary">{{ .BaseScore }}</h2>
+          <div class="card-tite text-xl font-bold">CVE-2023-2322</div>
           <p class="card-text">{{ .Description }}</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-outline btn-xs">Mitigation</button>
+            <button class="btn btn-outline btn-xs">further Information</button>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
   {{ end }}
