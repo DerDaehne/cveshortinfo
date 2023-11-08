@@ -1,6 +1,6 @@
 FROM scratch
 
-ADD ./cveshortinfo
-ADD ./templates
+COPY ./cveshortinfo ./cveshortinfo
+COPY ./templates ./templates
 
 ENTRYPOINT ["./cveshortinfo"]
